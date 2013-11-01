@@ -39,27 +39,18 @@ with describe('Car wash service') as _:
     with context('reporting'):
 
         with describe('when client report requested'):
-            @pending
+            
             def it_shows_all_wash_services_for_that_client():
+                _.car_wash_service.require_car_wash(car1, customer2)
                 _.car_wash_service.require_car_wash(car1, customer1)
                 _.car_wash_service.require_car_wash(car2, customer1)
                 _.car_wash_service.require_car_wash(car3, customer1)
+                _.car_wash_service.require_car_wash(car1, customer2)
 
                 services = _.car_wash_service.services_by_customer(customer1)
 
-                print services
+                assert_that(services, has_items(CarWashJob(car1, customer1),
+                                                CarWashJob(car2, customer1),
+                                                CarWashJob(car3, customer1),))
+                assert_that(services, not(has_item(CarWashJob(car1, customer2))))
 
-                assert_that(services, contains(
-                    CarWashJob(car1, customer1),
-                    CarWashJob(car2, customer1),
-                    CarWashJob(car3, customer1),
-                    ))
-                
-
-                pass
-
-        with describe('when a dailey report requested'):
-
-            @pending
-            def it_shows_today_wash_services():
-                pass

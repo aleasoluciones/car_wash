@@ -20,4 +20,5 @@ class CarWashService(object):
             text='Car %{car.plate} whased'.format(car=car_wash_job.car))
 
     def services_by_customer(self, customer):
-        pass
+        return [job for job in self.persistence.values() if job.customer == customer]
+        
