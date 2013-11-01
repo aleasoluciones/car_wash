@@ -4,18 +4,19 @@ from mamba import *
 from hamcrest import *
 from doublex import *
 
-from car_wash import service, car, customer
+from car_wash import service
+from car_wash import CarWashJob, Car, Customer
 
 def create_car_wash_service(sms_sender):
     return service.CarWashService(sms_sender)
 
 
-car1 = car.Car(plate='123-XXX')
-car2 = car.Car(plate='666-XXX')
-car3 = car.Car(plate='777-XXX')
-customer1 = customer.Customer(name='customer1', mobile_phone='123')
-customer2 = customer.Customer(name='customer2', mobile_phone='666')
-customer3 = customer.Customer(name='customer1', mobile_phone='777')
+car1 = Car(plate='123-XXX')
+car2 = Car(plate='666-XXX')
+car3 = Car(plate='777-XXX')
+customer1 = Customer(name='customer1', mobile_phone='123')
+customer2 = Customer(name='customer2', mobile_phone='666')
+customer3 = Customer(name='customer1', mobile_phone='777')
 
 with describe('Car wash service') as _:
 
@@ -38,9 +39,23 @@ with describe('Car wash service') as _:
     with context('reporting'):
 
         with describe('when client report requested'):
-
             @pending
             def it_shows_all_wash_services_for_that_client():
+                _.car_wash_service.require_car_wash(car1, customer1)
+                _.car_wash_service.require_car_wash(car2, customer1)
+                _.car_wash_service.require_car_wash(car3, customer1)
+
+                services = _.car_wash_service.services_by_customer(customer1)
+
+                print services
+
+                assert_that(services, contains(
+                    CarWashJob(car1, customer1),
+                    CarWashJob(car2, customer1),
+                    CarWashJob(car3, customer1),
+                    ))
+                
+
                 pass
 
         with describe('when a dailey report requested'):
