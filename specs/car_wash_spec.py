@@ -28,3 +28,17 @@ with describe('Car wash service') as _:
                 assert_that(sms_sender.send,
                     called().with_args(mobile_phone='555555555',
                         text=contains_string('1234-XXX')))
+
+    with context('reporting'):
+
+        with describe('when client report requested'):
+
+            @pending
+            def it_shows_all_wash_services_for_that_client():
+                pass
+
+        with describe('when a dailey report requested'):
+
+            @pending
+            def it_shows_today_wash_services():
+                pass
