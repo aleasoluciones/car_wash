@@ -40,7 +40,7 @@ with describe('Car wash service') as _:
 
         with describe('when client report requested'):
             
-            def it_shows_all_wash_services_for_that_client():
+            def it_shows_all_wash_services_for_that_customer():
                 _.car_wash_service.require_car_wash(car1, customer2)
                 _.car_wash_service.require_car_wash(car1, customer1)
                 _.car_wash_service.require_car_wash(car2, customer1)
