@@ -5,9 +5,9 @@ from car_wash import CarWashJob
 
 class CarWashService(object):
 
-    def __init__(self, sms_sender):
+    def __init__(self, notifier):
         self.persistence = {}
-        self.sms_sender = sms_sender
+        self.notifier = notifier
 
     def require_car_wash(self, car, customer):
         service_id = uuid.uuid4().hex
@@ -16,9 +16,8 @@ class CarWashService(object):
 
     def wash_completed(self, service_id):
         car_wash_job = self.persistence[service_id]
-        self.sms_sender.send(mobile_phone=car_wash_job.customer.mobile_phone,
-            text='Car %{car.plate} whased'.format(car=car_wash_job.car))
+        self.notifier.job_completed(car_wash_job)
 
     def services_by_customer(self, customer):
         return [job for job in self.persistence.values() if job.customer == customer]
-        
+

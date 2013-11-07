@@ -7,8 +7,8 @@ from doublex import *
 from car_wash import service
 from car_wash import CarWashJob, Car, Customer
 
-def create_car_wash_service(sms_sender):
-    return service.CarWashService(sms_sender)
+def create_car_wash_service(notifier):
+    return service.CarWashService(notifier)
 
 
 car1 = Car(plate='123-XXX')
@@ -22,8 +22,8 @@ with describe('Car wash service') as _:
 
     @before.each
     def set_up():
-        _.sms_sender = Spy()
-        _.car_wash_service = create_car_wash_service(_.sms_sender)
+        _.notifier = Spy()
+        _.car_wash_service = create_car_wash_service(_.notifier)
 
     with context('customer notification'):
 
@@ -33,13 +33,13 @@ with describe('Car wash service') as _:
                 service_id = _.car_wash_service.require_car_wash(car1, customer1)
                 _.car_wash_service.wash_completed(service_id)
 
-                assert_that(_.sms_sender.send,
-                    called().with_args(mobile_phone='123', text=contains_string('123-XXX')))
+                assert_that(_.notifier.job_completed,
+                    called().with_args(CarWashJob(car1, customer1)))
 
     with context('reporting'):
 
         with describe('when client report requested'):
-            
+
             def it_shows_all_wash_services_for_that_customer():
                 _.car_wash_service.require_car_wash(car1, customer2)
                 _.car_wash_service.require_car_wash(car1, customer1)
