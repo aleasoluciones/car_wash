@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import uuid
-from car_wash import CarWashJob
+import collections
+
+Car = collections.namedtuple('Car', ['plate'])
+Customer = collections.namedtuple('Customer', ['name', 'mobile_phone'])
+CarWashJob = collections.namedtuple('CarWashJob', ['car', 'customer'])
 
 
 class InMemoryJobRepository(object):

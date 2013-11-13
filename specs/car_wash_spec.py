@@ -4,11 +4,10 @@ from mamba import *
 from hamcrest import *
 from doublex import *
 
-from car_wash import service
-from car_wash import CarWashJob, Car, Customer
+from car_wash import CarWashService, CarWashJob, Car, Customer, InMemoryJobRepository
 
 def create_car_wash_service(notifier, repository):
-    return service.CarWashService(notifier, repository)
+    return CarWashService(notifier, repository)
 
 
 car1 = Car(plate='123-XXX')
@@ -23,7 +22,7 @@ with describe('Car wash service') as _:
     @before.each
     def set_up():
         _.notifier = Spy()
-        _.car_wash_service = create_car_wash_service(_.notifier, service.InMemoryJobRepository())
+        _.car_wash_service = create_car_wash_service(_.notifier, InMemoryJobRepository())
 
     with context('customer notification'):
 
