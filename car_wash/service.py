@@ -3,21 +3,37 @@
 import uuid
 from car_wash import CarWashJob
 
+
+class InMemoryJobRepository(object):
+
+    def __init__(self):
+        self._storage = {}
+
+    def put(self, job):
+        job_id = uuid.uuid4().hex
+        self._storage[job_id] = job
+        return job_id
+
+    def find_all(self):
+        return self._storage.values()
+
+    def find_by_id(self, job_id):
+        return self._storage.get(job_id)
+
+
 class CarWashService(object):
 
-    def __init__(self, notifier):
-        self.persistence = {}
+    def __init__(self, notifier, repository):
+        self.repository = repository
         self.notifier = notifier
 
     def require_car_wash(self, car, customer):
-        service_id = uuid.uuid4().hex
-        self.persistence[service_id] = CarWashJob(car, customer)
-        return service_id
+        return self.repository.put(CarWashJob(car, customer))
 
     def wash_completed(self, service_id):
-        car_wash_job = self.persistence[service_id]
+        car_wash_job = self.repository.find_by_id(service_id)
         self.notifier.job_completed(car_wash_job)
 
     def services_by_customer(self, customer):
-        return [job for job in self.persistence.values() if job.customer == customer]
+        return [job for job in self.repository.find_all() if job.customer == customer]
 
