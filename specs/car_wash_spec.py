@@ -25,31 +25,30 @@ with describe('Car wash service') as _:
         _.car_wash_service = create_car_wash_service(_.notifier, InMemoryJobRepository())
 
     with context('customer notification'):
-
         with describe('when service completed'):
-
             def it_notifies_the_customer():
-                service_id = _.car_wash_service.require_car_wash(car1, customer1)
-                _.car_wash_service.wash_completed(service_id)
+                _.car_wash_service.enter_in_the_car_wash(car1, customer1)
+                _.car_wash_service.wash_completed('123-XXX.123')
 
                 assert_that(_.notifier.job_completed,
-                    called().with_args(CarWashJob(car1, customer1)))
+                    called().with_args(_make_car_wash_job_with(car1, customer1)))
 
     with context('reporting'):
-
         with describe('when client report requested'):
-
             def it_shows_all_wash_services_for_that_customer():
-                _.car_wash_service.require_car_wash(car1, customer2)
-                _.car_wash_service.require_car_wash(car1, customer1)
-                _.car_wash_service.require_car_wash(car2, customer1)
-                _.car_wash_service.require_car_wash(car3, customer1)
-                _.car_wash_service.require_car_wash(car1, customer2)
+                _.car_wash_service.enter_in_the_car_wash(car1, customer2)
+                _.car_wash_service.enter_in_the_car_wash(car1, customer1)
+                _.car_wash_service.enter_in_the_car_wash(car2, customer1)
+                _.car_wash_service.enter_in_the_car_wash(car3, customer1)
 
                 services = _.car_wash_service.services_by_customer(customer1)
 
-                assert_that(services, has_items(CarWashJob(car1, customer1),
-                                                CarWashJob(car2, customer1),
-                                                CarWashJob(car3, customer1),))
-                assert_that(services, not(has_item(CarWashJob(car1, customer2))))
+                assert_that(services, has_items(_make_car_wash_job_with(car1, customer1),
+                                               _make_car_wash_job_with(car2, customer1),
+                                               _make_car_wash_job_with(car3, customer1)))
+                assert_that(services, not(has_item(_make_car_wash_job_with(car1, customer2))))
+
+    def _make_car_wash_job_with(car, customer):
+        return CarWashJob(car, customer)
+
 
