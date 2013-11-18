@@ -50,5 +50,3 @@ with describe('Car wash service') as _:
 
     def _make_car_wash_job_with(car, customer):
         return CarWashJob(car, customer)
-
-

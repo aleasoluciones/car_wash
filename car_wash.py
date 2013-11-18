@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
+import os
+import pickle
 import collections
+import glob
 
 Car = collections.namedtuple('Car', ['plate'])
 Customer = collections.namedtuple('Customer', ['name', 'mobile_phone'])
@@ -24,6 +27,29 @@ class CarWashJob(object):
 
     def __ne__(self, other):
         return not self.__eq__(other)
+
+
+class FileJobRepository(object):
+
+    def __init__(self, storage_dir='storage'):
+        self._storage_dir = storage_dir
+
+    def put(self, job):
+        with open(self._compose_file_name(job.service_id), 'w') as f:
+            f.write(pickle.dumps(job))
+
+    def find_by_id(self, job_id):
+        return self._read_job_from(self._compose_file_name(job_id))
+
+    def find_by_customer(self, customer):
+        return [self._read_job_from(file) for file in glob.glob(self._compose_file_name('*'))]
+
+    def _compose_file_name(self, job_id):
+        return os.path.join(self._storage_dir, job_id)
+
+    def _read_job_from(self, file):
+        with open(file, 'r') as f:
+            return pickle.loads(f.read())
 
 
 class InMemoryJobRepository(object):
