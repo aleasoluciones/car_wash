@@ -52,19 +52,16 @@ class FileJobRepository(object):
             return pickle.loads(f.read())
 
 
-class InMemoryJobRepository(object):
-
-    def __init__(self):
-        self._storage = {}
+class InMemoryJobRepository(dict):
 
     def put(self, job):
-        self._storage[job.service_id] = job
+        self[job.service_id] = job
 
     def find_by_id(self, job_id):
-        return self._storage.get(job_id)
+        return self.get(job_id)
 
     def find_by_customer(self, customer):
-        return [job for job in self._storage.values() if job.has_customer(customer)]
+        return [job for job in self.values() if job.has_customer(customer)]
 
 
 class CarWashService(object):
