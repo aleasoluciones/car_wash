@@ -28,6 +28,12 @@ class CarWashJob(object):
     def __ne__(self, other):
         return not self.__eq__(other)
 
+    def __repr__(self):
+        return "%s %s" % (self.__class_name_without_module(), self.__dict__)
+
+    def __class_name_without_module(self):
+        return self.__class__.__name__.split('.')[-1]
+
 
 class FileJobRepository(object):
 
@@ -50,6 +56,17 @@ class FileJobRepository(object):
     def _read_job_from(self, file):
         with open(file, 'r') as f:
             return pickle.loads(f.read())
+
+class ConsoleJobNotifier(object):
+
+    def job_completed(self, car_wash_job):
+        print(car_wash_job)
+
+
+class NullJobNotifier(object):
+
+    def job_completed(self, car_wash_job):
+        pass
 
 
 class InMemoryJobRepository(dict):
