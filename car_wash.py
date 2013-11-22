@@ -72,16 +72,32 @@ class NullJobNotifier(object):
         pass
 
 
-class InMemoryJobRepository(dict):
+class IJobRepository():
 
     def put(self, job):
-        self[job.service_id] = job
+        raise NotImplementedError()
 
     def find_by_id(self, job_id):
-        return self.get(job_id)
+        raise NotImplementedError()
 
     def find_by_customer(self, customer):
-        return [job for job in self.values() if job.has_customer(customer)]
+        raise NotImplementedError()
+
+
+class InMemoryJobRepository(IJobRepository):
+
+    def __init__(self):
+        self._storage = {}
+
+    def put(self, job):
+        self._storage[job.service_id] = job
+
+    def find_by_id(self, job_id):
+        return self._storage.get(job_id)
+
+    def find_by_customer(self, customer):
+        return [job for job in self._storage.values()
+         if job.has_customer(customer)]
 
 
 class CarWashService(object):
