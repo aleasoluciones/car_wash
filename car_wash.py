@@ -57,6 +57,7 @@ class FileJobRepository(object):
         with open(file, 'r') as f:
             return pickle.loads(f.read())
 
+
 class ConsoleJobNotifier(object):
 
     def job_completed(self, car_wash_job):
@@ -88,7 +89,9 @@ class CarWashService(object):
         self.notifier = notifier
 
     def enter_in_the_car_wash(self, car, customer):
-        self.repository.put(CarWashJob(car, customer))
+        job = CarWashJob(car, customer)
+        self.repository.put(job)
+        return job
 
     def wash_completed(self, service_id):
         car_wash_job = self.repository.find_by_id(service_id)

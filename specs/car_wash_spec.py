@@ -24,6 +24,14 @@ with describe('Car wash service') as _:
         _.notifier = Spy()
         _.car_wash_service = create_car_wash_service(_.notifier, InMemoryJobRepository())
 
+    with context('car wash job'):
+        with describe('when the car enters in the car wash'):
+            def it_registers_a_job():
+                job = _.car_wash_service.enter_in_the_car_wash(car1, customer1)
+
+                assert_that(job.has_customer(customer1), is_(True))
+                assert_that(job.service_id, is_not(None))
+
     with context('customer notification'):
         with describe('when service completed'):
             def it_notifies_the_customer():
