@@ -39,6 +39,8 @@ class FileJobRepository(object):
 
     def __init__(self, storage_dir='storage'):
         self._storage_dir = storage_dir
+        if not os.path.exists(self._storage_dir):
+            os.makedirs(self._storage_dir)
 
     def put(self, job):
         with open(self._compose_file_name(job.service_id), 'w') as f:
@@ -61,7 +63,7 @@ class FileJobRepository(object):
 class ConsoleJobNotifier(object):
 
     def job_completed(self, car_wash_job):
-        print(car_wash_job)
+        print("Completed job %s" % car_wash_job.service_id)
 
 
 class NullJobNotifier(object):
