@@ -81,7 +81,8 @@ class InMemoryJobRepository(dict):
         return self.get(job_id)
 
     def find_by_customer(self, customer):
-        return [job for job in self.values() if job.has_customer(customer)]
+        return [job for job in self.values()
+            if job.has_customer(customer)]
 
 
 class CarWashService(object):
