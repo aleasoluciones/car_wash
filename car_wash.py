@@ -72,19 +72,7 @@ class NullJobNotifier(object):
         pass
 
 
-class IJobRepository():
-
-    def put(self, job):
-        raise NotImplementedError()
-
-    def find_by_id(self, job_id):
-        raise NotImplementedError()
-
-    def find_by_customer(self, customer):
-        raise NotImplementedError()
-
-
-class InMemoryJobRepository(IJobRepository):
+class InMemoryJobRepository(object):
 
     def __init__(self):
         self._storage = {}
