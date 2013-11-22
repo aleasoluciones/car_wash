@@ -87,7 +87,7 @@ class InMemoryJobRepository(dict):
 
 class CarWashService(object):
 
-    def __init__(self, notifier, repository):
+    def __init__(self, repository):
         self.repository = repository
         self.sms_notifier = SmsNotifier()
 
