@@ -89,7 +89,6 @@ class CarWashService(object):
 
     def __init__(self, notifier, repository):
         self.repository = repository
-        self.notifier = notifier
 
     def enter_in_the_car_wash(self, car, customer):
         job = CarWashJob(car, customer)
@@ -98,7 +97,7 @@ class CarWashService(object):
 
     def wash_completed(self, service_id):
         car_wash_job = self.repository.find_by_id(service_id)
-        self.notifier.job_completed(car_wash_job)
+        SmsNotifier.notify_job_completed(car_wash_job)
 
     def services_by_customer(self, customer):
         return self.repository.find_by_customer(customer)
