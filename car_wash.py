@@ -23,13 +23,14 @@ class CarWashJob(object):
         return '{car.plate}.{customer.mobile_phone}'.format(car=self._car, customer=self._customer)
 
     def __eq__(self, other):
-        return (isinstance(other, self.__class__) and self.__dict__ == other.__dict__)
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
 
     def __ne__(self, other):
         return not self.__eq__(other)
 
     def __repr__(self):
-        return "%s %s" % (self.__class_name_without_module(), self.__dict__)
+        return "{module} {dict}".format(modeule=self.__class_name_without_module(),
+                                        dict=self.__dict__)
 
     def __class_name_without_module(self):
         return self.__class__.__name__.split('.')[-1]
@@ -63,7 +64,7 @@ class FileJobRepository(object):
 class ConsoleJobNotifier(object):
 
     def job_completed(self, car_wash_job):
-        print("Completed job %s" % car_wash_job.service_id)
+        print("Completed job {job_id}".format(job_id=car_wash_job.service_id))
 
 
 class NullJobNotifier(object):
