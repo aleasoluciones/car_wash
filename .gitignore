@@ -38,5 +38,8 @@ nosetests.xml
 #PyCharm
 .idea/*
 
+# vim
+tags
+
 # File storage folder
 storage/*
